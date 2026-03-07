@@ -1,0 +1,229 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;700&family=Poppins:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.09);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --text-soft: #c8d1f5;
+  --admin-bg: #e8edfb;
+  --admin-surface: #f4f7ff;
+  --admin-card: #ffffff;
+  --admin-card-2: #f8faff;
+  --admin-border: #d9e2f4;
+  --admin-soft: #6a7797;
+  --admin-text: #1f2d4f;
+  --admin-primary: #2f49c8;
+  --admin-primary-soft: #e8eeff;
+  --admin-lime: #2f49c8;
+  --admin-orange: #4f6fe9;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  min-height: 100vh;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #000000 20%, #001a4d 45%, #0033cc 70%, #00c6ff 100%);
+  background-attachment: fixed;
+  color: #eff6ff;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.background {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #000000 20%, #001a4d 45%, #0033cc 70%, #00c6ff 100%);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: theme("boxShadow.glass");
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.text-soft {
+  color: var(--text-soft);
+}
+
+.content-fade-in {
+  animation: content-fade 450ms ease;
+}
+
+@keyframes content-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body.admin-mode {
+  font-family: "Space Grotesk", "Manrope", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(920px 420px at 100% -30%, rgba(79, 111, 233, 0.24), transparent 70%),
+    radial-gradient(860px 420px at -10% -10%, rgba(47, 73, 200, 0.22), transparent 66%),
+    linear-gradient(180deg, #eef2fc 0%, var(--admin-bg) 100%);
+  color: var(--admin-text);
+}
+
+.admin-shell {
+  max-width: 1540px;
+  margin: 0 auto;
+  padding: 1rem;
+  border-radius: 2rem;
+  background: transparent;
+  box-shadow: none;
+}
+
+.admin-content-wrap {
+  padding: 0.45rem 0.35rem 6.5rem 0.35rem;
+  border-radius: 1.6rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(244, 248, 255, 0.9));
+  border: 1px solid rgba(215, 224, 242, 0.75);
+}
+
+.admin-main {
+  padding-bottom: 0.65rem;
+}
+
+@media (min-width: 1024px) {
+  .admin-content-wrap {
+    padding: 0.5rem 1.15rem 1rem 0.3rem;
+  }
+}
+
+.admin-topbar {
+  background: linear-gradient(180deg, #ffffff, #f7f9ff);
+  border-color: var(--admin-border);
+  box-shadow: 0 10px 24px rgba(18, 47, 130, 0.08);
+}
+
+.admin-sidebar {
+  background: linear-gradient(180deg, #2f49c8 0%, #2a43bc 50%, #253ba4 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 55px rgba(16, 34, 103, 0.45);
+}
+
+.admin-mobile-nav {
+  background: rgba(38, 59, 163, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.admin-main .glass-card {
+  background: linear-gradient(155deg, var(--admin-card-2) 0%, var(--admin-card) 100%);
+  border: 1px solid var(--admin-border);
+  box-shadow: 0 14px 30px rgba(34, 64, 145, 0.08);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.admin-shell .text-soft {
+  color: var(--admin-soft);
+}
+
+.admin-shell .admin-heading {
+  font-family: "Bebas Neue", "Poppins", sans-serif;
+  letter-spacing: 0.04em;
+}
+
+.admin-main .admin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--admin-border);
+  background: #f1f5ff;
+  color: var(--admin-text);
+  padding: 0.52rem 0.95rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 160ms ease;
+}
+
+.admin-main .admin-pill:hover {
+  border-color: #c7d4f3;
+  background: #e7eeff;
+}
+
+.admin-main .admin-pill.active {
+  border-color: rgba(47, 73, 200, 0.32);
+  background: rgba(47, 73, 200, 0.12);
+}
+
+.admin-shell .admin-avatar-ring {
+  box-shadow: 0 0 0 1px rgba(47, 73, 200, 0.4), 0 0 0 4px rgba(47, 73, 200, 0.14);
+}
+
+.admin-shell input,
+.admin-shell select,
+.admin-shell textarea {
+  background-color: #f8faff;
+  border-color: var(--admin-border);
+  color: var(--admin-text);
+}
+
+.admin-shell input:focus,
+.admin-shell select:focus,
+.admin-shell textarea:focus {
+  border-color: rgba(47, 73, 200, 0.45);
+  box-shadow: 0 0 0 2px rgba(47, 73, 200, 0.14);
+}
+
+.admin-shell .bg-gradient-to-r.from-violetBrand-500.to-brand-500 {
+  background-image: linear-gradient(90deg, var(--admin-lime), var(--admin-orange));
+  color: #ffffff;
+}
+
+.admin-shell .bg-gradient-to-r.from-violetBrand-500.to-brand-500:hover {
+  filter: brightness(1.06);
+}
+
+.admin-main .admin-panel-outline {
+  border: 1px solid var(--admin-border);
+  background: #f8faff;
+}
+
+.admin-main .text-soft {
+  color: var(--admin-soft);
+}
+
+.admin-main .text-white {
+  color: var(--admin-text);
+}
+
+.admin-main button.text-white,
+.admin-main a.text-white {
+  color: #ffffff;
+}
+
+.admin-main button[class*="bg-white/"],
+.admin-main a[class*="bg-white/"] {
+  background: var(--admin-primary-soft) !important;
+  border-color: #cad6f2 !important;
+  color: var(--admin-primary) !important;
+}
+
+.admin-main button[class*="bg-white/"]:hover,
+.admin-main a[class*="bg-white/"]:hover {
+  background: #dfe8ff !important;
+}
+
+.admin-main input::placeholder,
+.admin-main textarea::placeholder {
+  color: #96a2bf;
+}
+
+.admin-sidebar .text-soft {
+  color: rgba(229, 236, 255, 0.74);
+}
