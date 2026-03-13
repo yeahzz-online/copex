@@ -3,22 +3,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import PortalIcon, { getNavIconName } from "./PortalIcon";
 import { navByRole } from "../routes/navConfig";
 
-function getInitials(name, fallback = "U") {
-  const clean = String(name || "").trim();
-  if (!clean) return fallback;
-  const parts = clean.split(/\s+/).filter(Boolean);
-  if (parts.length === 1) {
-    return parts[0].slice(0, 2).toUpperCase();
-  }
-  return `${parts[0][0] || ""}${parts[1][0] || ""}`.toUpperCase();
-}
-
 export default function TopBar() {
   const { user, role, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const navItems = navByRole[role] || [];
   const isAdmin = role === "ADMIN";
+  const isFaculty = role === "FACULTY";
+  const isStudent = role === "STUDENT";
+  const showPortalLogo = isFaculty || isStudent;
 
   const activeNav =
     navItems.find(
@@ -27,7 +20,21 @@ export default function TopBar() {
     ) || null;
 
   const pageTitle = activeNav?.label || "Overview";
-  const initials = getInitials(user?.name, "U");
+  const displayName = user?.name || "User";
+  const initials =
+    String(displayName || "")
+      .split(" ")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() || "")
+      .join("") || "U";
+  const hasProfilePhoto = Boolean(user?.profilePhoto && String(user.profilePhoto).trim());
+  const avatarSrc =
+    (user?.profilePhoto && String(user.profilePhoto).trim()) || "/auth-assets/profile-placeholder.svg";
+  const onAvatarError = (event) => {
+    if (event.currentTarget.src.includes("/auth-assets/profile-placeholder.svg")) return;
+    event.currentTarget.src = "/auth-assets/profile-placeholder.svg";
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -38,12 +45,22 @@ export default function TopBar() {
     <header
       className={`mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 px-4 py-3 ${
         isAdmin ? "admin-topbar" : "bg-white/5"
-      }`}
+      } ${isStudent ? "student-topbar" : ""}`}
     >
       <div className="flex items-center gap-3">
+        {showPortalLogo ? (
+          <img
+            src="/auth-assets/logo.jpg"
+            alt="CMR logo"
+            className="h-10 w-10 rounded-xl border border-white/15 object-cover"
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+            }}
+          />
+        ) : null}
         <span
           className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${
-            isAdmin ? "bg-[#e9efff] text-[#2f49c8]" : "bg-white/10 text-white"
+            isAdmin ? "bg-[#CFCFCF] text-[#141414]" : "bg-white/10 text-white"
           }`}
         >
           <PortalIcon name={getNavIconName(activeNav?.href)} className="h-5 w-5" />
@@ -52,7 +69,7 @@ export default function TopBar() {
           <p className="text-[11px] uppercase tracking-[0.16em] text-soft">Current Page</p>
           <h2
             className={`font-display text-lg sm:text-xl ${
-              isAdmin ? "text-[#1f2d4f]" : "text-white"
+              isAdmin ? "text-[#141414]" : "text-white"
             }`}
           >
             {pageTitle}
@@ -62,29 +79,34 @@ export default function TopBar() {
 
       <div className="flex items-center gap-3">
         <div className="hidden text-right sm:block">
-          <p className={`text-sm font-semibold ${isAdmin ? "text-[#1f2d4f]" : "text-white"}`}>
-            {user?.name || "User"}
+          <p className={`text-sm font-semibold ${isAdmin ? "text-[#141414]" : "text-white"}`}>
+            {displayName}
           </p>
           <p className="text-[11px] uppercase tracking-[0.18em] text-soft">{role || "User"}</p>
         </div>
         <span
-          className={`flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold text-white ${
+          className={`flex h-11 w-11 items-center justify-center rounded-full text-sm font-semibold ${
             isAdmin
-              ? "bg-gradient-to-br from-[#3151d3] to-[#4f6fe9]"
-              : "bg-gradient-to-br from-brand-500 to-violetBrand-500"
+              ? "border border-slate-300 bg-slate-200 text-[#141414]"
+              : "bg-gradient-to-br from-brand-500 to-violetBrand-500 text-white"
           }`}
-          title={user?.name || "Account"}
+          title={displayName || "Account"}
         >
-          {initials}
+          {hasProfilePhoto ? (
+            <img
+              src={avatarSrc}
+              alt="Profile"
+              className="h-full w-full rounded-full object-cover"
+              onError={onAvatarError}
+            />
+          ) : (
+            <span className="text-sm font-semibold">{initials}</span>
+          )}
         </span>
         <button
           type="button"
           onClick={handleLogout}
-          className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition ${
-            isAdmin
-              ? "bg-[#edf2ff] text-[#2f49c8] hover:bg-[#e4ecff] border border-[#ced9f2]"
-              : "bg-white/15 text-white hover:bg-white/25 border border-white/10"
-          }`}
+          className="inline-flex items-center gap-2 rounded-xl border border-red-600 bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
         >
           <PortalIcon name="logout" className="h-4 w-4" />
           <span className="hidden sm:inline">Logout</span>

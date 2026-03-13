@@ -3,10 +3,18 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import GlassCard from "../components/GlassCard";
 import useAuth from "../hooks/useAuth";
 
+function getRoleLandingPath(role) {
+  if (role === "STUDENT") return "/student/home";
+  if (role === "FACULTY") return "/faculty/dashboard";
+  if (role === "ADMIN") return "/admin/dashboard";
+  if (role === "SMARTBOARD") return "/smartboard/view";
+  return "/login";
+}
+
 export default function VerifyOtpPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { verifyOtp } = useAuth();
+  const { verifyOtp, login } = useAuth();
   const [email, setEmail] = useState(location.state?.email || "");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -18,15 +26,30 @@ export default function VerifyOtpPage() {
     setMessage("");
     try {
       await verifyOtp({ email, otp });
+      const autoLogin = location.state?.autoLogin || null;
+
       if (location.state?.next === "student-setup") {
         setMessage("Account verified successfully. Continue profile setup.");
         setTimeout(
           () =>
             navigate("/student/setup", {
-              state: { email: email.trim() }
+              state: { email: email.trim(), autoLogin }
             }),
           900
         );
+      } else if (location.state?.next === "faculty-setup") {
+        setMessage("Account verified successfully. Continue faculty setup.");
+        setTimeout(
+          () =>
+            navigate("/faculty/setup", {
+              state: { email: email.trim(), autoLogin }
+            }),
+          900
+        );
+      } else if (autoLogin) {
+        const user = await login(autoLogin);
+        setMessage("Account verified. Logging you in.");
+        setTimeout(() => navigate(getRoleLandingPath(user.role), { replace: true }), 700);
       } else {
         setMessage("Account verified successfully. You can now sign in.");
         setTimeout(() => navigate("/login"), 900);
